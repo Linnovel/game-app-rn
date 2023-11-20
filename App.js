@@ -4,12 +4,13 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import GameScreen from "./screens/GameScreens";
 import GameIsOverScreen from "./screens/GameIsOverScreen";
-
+import { StatusBar } from 'expo-status-bar'
 
 
 export default function App() {
   const [userNumber, setUserNumber] = useState();
   const [gameIsOver, setGameIsOver] = useState(true);
+  const [guessRounds, setGuessRounds] = useState(0);
 
 
 
@@ -18,8 +19,14 @@ export default function App() {
     setGameIsOver(false);
   }
 
-  function gameOverHandler() {
+  function gameOverHandler(numberOfRounds) {
     setGameIsOver(true);
+    setGuessRounds(numberOfRounds)
+  }
+
+  function startNewGameHandler() {
+    setUserNumber(null);
+    setGuessRounds(0);
   }
 
 
@@ -32,26 +39,28 @@ export default function App() {
 
 
   if (gameIsOver && userNumber) {
-    screen = <GameIsOverScreen />
+    screen = <GameIsOverScreen userNumber={userNumber} roundsNumber={guessRounds} onStartNewGame={startNewGameHandler} />
   }
 
 
   return (
-    <LinearGradient
-      colors={["#833ab4", "#fd1d1d", "#fcb045"]}
-      style={styles.rootBackgroundColor}
-    >
-      <ImageBackground
-        source={require("./assets/images/background.png")}
-        resizeMode="cover"
+    <StatusBar style="light">
+      <LinearGradient
+        colors={["#833ab4", "#fd1d1d", "#fcb045"]}
         style={styles.rootBackgroundColor}
-        imageStyle={styles.backgroundImage}
       >
-        <SafeAreaView style={styles.rootBackgroundColor}>
-          {screen}
-        </SafeAreaView>
-      </ImageBackground>
-    </LinearGradient>
+        <ImageBackground
+          source={require("./assets/images/background.png")}
+          resizeMode="cover"
+          style={styles.rootBackgroundColor}
+          imageStyle={styles.backgroundImage}
+        >
+          <SafeAreaView style={styles.rootBackgroundColor}>
+            {screen}
+          </SafeAreaView>
+        </ImageBackground>
+      </LinearGradient>
+    </StatusBar>
   );
 }
 
